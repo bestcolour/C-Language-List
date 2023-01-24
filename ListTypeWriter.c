@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "../StringExtension/StringExtensions.h"
+#include "./StringExtensions.h"
+
 
 #pragma region ===== Struct =====
 typedef struct memberData
@@ -43,7 +44,6 @@ enum dataType
     FLOAT,
     CHAR,
     DOUBLE
-    // STRING,
 };
 const int TYPELENGTH = 6;
 char *TYPE_DECLARATION[6] = {"struct", "*\0", "int", "float", "char", "double"};
