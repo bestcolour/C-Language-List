@@ -46,7 +46,7 @@ enum dataType
     LONG
 };
 const int TYPELENGTH = 7;
-char *TYPE_DECLARATION[7] = {"struct", "*\0", "int", "float", "char", "double", "long"};
+char *TYPE_DECLARATION[7] = {"struct", "*", "int", "float", "char", "double", "long"};
 #pragma endregion
 
 #pragma endregion
@@ -208,6 +208,7 @@ void declareCode()
     case STRUCT:
     {
         strrev(elementDefinition);
+        printf("elmtdefintiion reversed is: \'%s\'\n", elementDefinition);
 
         j = find_FirstSubstr_InStr(elementDefinition, "}"); // This is the position of the '{'
         j++;                                                // Now, from index j to i in elementDefinition is purely words for the declaration of vars
@@ -230,6 +231,7 @@ void declareCode()
 
                 if (elementDefinition[j] == ' ' && k > 0) // When this condition is met, it means that variableName is rdy to be recorded
                 {
+                    currWord[k] = '\0';
                     // Reverse the recorded currWord
                     strrev(currWord);
                     strcpy(elementMemberData[i].variableName, currWord);
@@ -243,9 +245,11 @@ void declareCode()
                 }
 
                 // Else, record this character into currWord
-                // printf("Curr: \'%c\'\n", elementDefinition[j]);
+                // printf("Previous currWord[k]: \'%c\'\n", currWord[k]);
+                // printf("CurrChar: \'%c\'\n", elementDefinition[j]);
                 currWord[k] = elementDefinition[j];
-                // printf("CurrWord: \'%s\' Last k index: \'%d\'\n", currWord, k);
+                // printf("currWord[k+1]: \'%c\'\n", currWord[k+1]);
+                // printf("New currWord: \'%s\' Last k index: \'%d\'\n", currWord, k);
                 k++;
             }
 #pragma endregion
@@ -279,10 +283,11 @@ void declareCode()
                     k++;
                 }
                     continue;
-                case true: // Is a pointer
+                case true: // Is a pointer/non-pointer
                 {
                     if (elementDefinition[j] == ' ') // Reached the end of type
                     {
+                        currWord[k] = '\0';
                         // record the word after whitespace into type
                         strrev(currWord);
                         remove_Orphan_WhiteSpaces(currWord, currWord);
@@ -314,6 +319,7 @@ void declareCode()
                 if (elementDefinition[j] == '{') // if loop has reached the end of the struct declaration
                 {
                     // Reverse the recorded currWord
+                    currWord[k] = '\0';
                     strrev(currWord);
                     remove_Orphan_WhiteSpaces(currWord, currWord);
 
@@ -325,6 +331,7 @@ void declareCode()
 
                 if (elementDefinition[j] == ';') // If reached the end of a line declaration, record the word and prepare for next var name
                 {
+                    currWord[k] = '\0';
                     strrev(currWord);
                     remove_Orphan_WhiteSpaces(currWord, currWord);
 
@@ -624,7 +631,10 @@ char *writeCode(char *line)
                 switch (j)
                 {
                 case STRUCT:
-                    printf("Sorry, we don't do nested struct initialization here. You'll have to initialize the struct yourself in the CreateList function\n");
+                    // printf("Sorry, we don't do nested struct initialization here. You'll have to initialize the struct yourself in the CreateList function\n");
+                    strcat(stringA, "Unable to write initialization statement for the variable \'");
+                    strcat(stringA, elementMemberData[i].variableName);
+                    strcat(stringA, "\'\n");
                     break;
                 case POINTER:
                     // Add allocate space line
@@ -713,7 +723,11 @@ char *writeCode(char *line)
                         strcat(stringA, ")==0)");
                     }
                     else
-                        printf("Unable to write comparison for pointer variable: \'%s\' \n", elementName);
+                    {
+                        strcat(stringA, "Unable to write comparison statement for the variable \'");
+                        strcat(stringA, elementName);
+                        strcat(stringA, "\'");
+                    }
                     break;
 
                 default:
@@ -767,7 +781,11 @@ char *writeCode(char *line)
                         strcat(stringA, ")==0)");
                     }
                     else
-                        printf("Unable to write comparison for pointer variable: \'%s\' \n", elementMemberData[j].variableName);
+                    {
+                        strcat(stringA, "Unable to write comparison statement for the variable \'");
+                        strcat(stringA, elementMemberData[j].variableName);
+                        strcat(stringA, "\'\n");
+                    }
                     break;
 
                 default:
@@ -839,7 +857,7 @@ char *writeCode(char *line)
                         strcat(stringA, "Value: %s\\n\", i, pList->pArray[i]);");
                     else
                     {
-                        strcat(stringA, "Unable to print output for the variable \'");
+                        strcat(stringA, "Unable to write print output for the variable \'");
                         strcat(stringA, elementName);
                         strcat(stringA, "\'\n");
                     }

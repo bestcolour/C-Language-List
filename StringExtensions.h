@@ -6,7 +6,7 @@
 // Checks if a string is a number. Returns 0 if it is not else it will return the number of digits found in the string.
 int isNumber(char *string)
 {
-    int length = sizeof(string) / sizeof(string[0]);
+    int length = strlen(string);
 
     int hasFoundNumber = 0;
 
@@ -105,9 +105,8 @@ void removeLineBreak(char *str)
         i = strcspn(str, "\n");
 
         str[i] = ' ';
-    } while (i !=len);
+    } while (i != len);
 }
-
 
 void remove_spaces(char *s)
 {
@@ -123,11 +122,7 @@ void remove_spaces(char *s)
 
 void clearCharArray(char array[])
 {
-    for (size_t i = 0; i < sizeof(array) / sizeof(array[0]); i++)
-    {
-        array[i] = '\0';
-    }
-    // memset(array, '\0', strlen(array));
+    memset(array, '\0', strlen(array));
 }
 
 // Removes a string from another string. Returns the string of the edited sentence.
@@ -152,7 +147,6 @@ void removeString(char *source, int wordPos, int wordLength)
         *(source + j + wordPos) = *(source + k);
         *(source + k) = '\0';
     }
-
 }
 
 char *insertStr(char *destination, char *sourceA, char *sourceB, int n)
