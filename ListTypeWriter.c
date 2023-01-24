@@ -3,7 +3,6 @@
 #include <stdbool.h>
 #include "./StringExtensions.h"
 
-
 #pragma region ===== Struct =====
 typedef struct memberData
 {
@@ -43,10 +42,11 @@ enum dataType
     INT,
     FLOAT,
     CHAR,
-    DOUBLE
+    DOUBLE,
+    LONG
 };
-const int TYPELENGTH = 6;
-char *TYPE_DECLARATION[6] = {"struct", "*\0", "int", "float", "char", "double"};
+const int TYPELENGTH = 7;
+char *TYPE_DECLARATION[7] = {"struct", "*\0", "int", "float", "char", "double", "long"};
 #pragma endregion
 
 #pragma endregion
@@ -940,6 +940,9 @@ void writeCode_printOutPut_ConcatForBasicCase(char *destination, char *variableN
     case DOUBLE:
         strcat(a, "Value: %lf\\n\", i, pList->pArray[i]);");
         break;
+    case LONG:
+        strcat(a, "Value: %ld\\n\", i, pList->pArray[i]);");
+        break;
 
     default:
         strcat(a, "Unable to print output for the variable \'");
@@ -970,6 +973,9 @@ void writeCode_printOutPut_ConcatForStructCase(char *destination, char *variable
         break;
     case DOUBLE:
         strcat(a, "%lf");
+        break;
+    case LONG:
+        strcat(a, "%ld");
         break;
 
     default:
